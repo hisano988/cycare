@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Domain\Repository\PeriodRecordRepository;
-use App\Infrastructure\RepositoryImpl\PeriodRecordRepositoryImpl;
+use App\Domain\Repositories\PeriodRecordRepository;
+use App\Infrastructure\RepositoryImpls\PeriodRecordRepositoryImpl;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
 

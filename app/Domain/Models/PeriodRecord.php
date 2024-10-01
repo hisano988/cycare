@@ -2,7 +2,7 @@
 
 namespace App\Domain\Models;
 
-use App\Domain\Repository\PeriodRecordRepository;
+use App\Domain\Repositories\PeriodRecordRepository;
 use Carbon\Carbon;
 
 class PeriodRecord
