@@ -20,7 +20,7 @@ class WebController extends Controller
             startDate: Carbon::parse($requst->input('start_date')),
             isCalcTarget: (bool) $requst->input('is_calc_target'),
         );
-        $periodRecord->recordStart();
+        $periodRecord->record($requst->has('end_date') ? Carbon::parse($requst->input('end_date')) : null);
 
         return redirect()->route('web.home');
     }

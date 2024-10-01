@@ -22,8 +22,15 @@ class PeriodRecord
         $this->isCalcTarget = $isCalcTarget;
     }
 
-    public function recordStart()
+    public function record(?Carbon $endDate)
     {
+        // 終了日設定
+        if (is_null($endDate)) {
+            $defaultDuration = 7; // TODO: 個別設定できるようにする
+            $endDate = $this->startDate->copy()->addDays($defaultDuration);
+        }
+        $this->endDate = $endDate;
+
         app(PeriodRecordRepository::class)::upsert($this);
     }
 }
