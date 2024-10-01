@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domain\Repository\PeriodRecordRepository;
+use App\Infrastructure\RepositoryImpl\PeriodRecordRepositoryImpl;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Repository
+        $this->app->singleton(PeriodRecordRepository::class, function (Application $app) {
+            return new PeriodRecordRepositoryImpl();
+        });
     }
 }
