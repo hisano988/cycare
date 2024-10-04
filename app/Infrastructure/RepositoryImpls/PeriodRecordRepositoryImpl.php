@@ -13,7 +13,7 @@ class PeriodRecordRepositoryImpl implements PeriodRecordRepository
         if (isset($periodRecord->periodRecordId)) {
             $eloquent = EloquentPeriodRecord::find($periodRecord->periodRecordId);
         } else {
-            $eloquent = new EloquentPeriodRecord();
+            $eloquent = new EloquentPeriodRecord;
         }
         $eloquent->user_id = $periodRecord->userId;
         $eloquent->start_date = $periodRecord->startDate;
@@ -22,6 +22,6 @@ class PeriodRecordRepositoryImpl implements PeriodRecordRepository
         $eloquent->save();
 
         $periodRecord->periodRecordId = $eloquent->period_record_id;
-        return;
+
     }
 }
