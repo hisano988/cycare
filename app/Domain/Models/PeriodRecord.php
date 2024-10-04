@@ -7,6 +7,8 @@ use Carbon\Carbon;
 
 class PeriodRecord
 {
+    public int $periodRecordId;
+
     public int $userId;
 
     public Carbon $startDate;
