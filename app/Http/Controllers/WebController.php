@@ -15,8 +15,10 @@ class WebController extends Controller
 
     public function record(Request $requst) // TODO: バリデーション
     {
+        $userId = \Auth::id();
+
         $periodRecord = new PeriodRecord(
-            userId: 1, // TODO: モックを外す
+            userId: $userId,
             startDate: Carbon::parse($requst->input('start_date')),
             isCalcTarget: (bool) $requst->input('is_calc_target'),
         );
