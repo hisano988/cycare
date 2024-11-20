@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Domain\Models\Cycle;
 use App\Domain\Models\PeriodRecord;
+use App\Domain\Repositories\PeriodRecordRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class WebController extends Controller
 {
-    public function showHome()
+    public function showHome(PeriodRecordRepository $periodRecordRepository)
     {
-        return view('home');
+        $userId = \Auth::id();
+
+        $userPeriodRecords = $periodRecordRepository::getPeriodRecords($userId);
+        $cycle = new Cycle($userPeriodRecords);
+
+        return view('home')->with([
+            'cycle' => $cycle,
+        ]);
     }
 
     public function record(Request $requst) // TODO: バリデーション

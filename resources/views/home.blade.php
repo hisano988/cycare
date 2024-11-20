@@ -9,6 +9,24 @@
     <body>
         <div>ホーム画面</div>
         <div>
+            @php
+                use Illuminate\Support\Carbon;
+            @endphp
+            <div>
+                @if ($cycle->isPredictable())
+                    @php
+                        $nextDay = $cycle->predictNextStartDate();
+                        $remainingDays = Carbon::today()->diffInDays($nextDay);
+                    @endphp
+                    @if($remainingDays >= 0)
+                        あと{{ $remainingDays }}日
+                    @else
+                        {{ -1 * $remainingDays }}日超過
+                    @endif
+                @else
+                    -
+                @endif
+            </div>
             <div>
                 <form action="{{ route('web.home.record') }}" method="post">
                     @csrf
