@@ -33,8 +33,8 @@ class Cycle
             ->reject(fn ($periodRecords) => ! $periodRecords->get(1)->isCalcTarget)
         // 間隔計算（日）
             ->map(function ($periodRecords) {
-                $beforeRecord = $periodRecords->get(0);
-                $nextRecord = $periodRecords->get(1);
+                $beforeRecord = $periodRecords->first();
+                $nextRecord = $periodRecords->last();
 
                 return $nextRecord->startDate->diffInDays($beforeRecord->startDate);
             });
