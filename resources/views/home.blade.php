@@ -42,7 +42,7 @@ use Illuminate\Support\Carbon;
                     </div>
                     <div class="modal-body">
                     @csrf
-                    <input class="form-control" type="text" name="start_date" value={{ \Carbon\Carbon::now()->format('Y-m-d') }} />
+                    <input class="form-control" type="date" name="start_date" value={{ \Carbon\Carbon::now()->format('Y-m-d') }} />
                     <label class="form-check-label" for="isCalcTarget">
                         周期予測の計算対象に含める
                     </label>
