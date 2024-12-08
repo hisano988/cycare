@@ -54,6 +54,6 @@ class Cycle
         $avgInterval = (int) $this->intervals->avg();
         $latestPeriodRecord = $this->periodRecords->first();
 
-        return $latestPeriodRecord->startDate->addDays($avgInterval);
+        return $latestPeriodRecord->startDate->copy()->addDays($avgInterval);
     }
 }
