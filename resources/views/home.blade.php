@@ -28,6 +28,7 @@ use Illuminate\Support\Carbon;
         </div>
         <div id="app">
             <Calender
+                default-year-month="{{ Carbon::today()->format('Y-m') }}"
             ></Calender>
         </div>
     </div>

@@ -33,31 +33,36 @@
 <script lang="ts">
 export default {
   props: {
+    defaultYearMonth: {
+        type: String, // Y-m
+        required: true,
+    },
   },
   data() {
     const today = new Date();
     return {
         today: today,
-        yearMonth: today.getFullYear() + '-' + (today.getMonth() + 1), // Y-m
+        yearMonth: this.$props.defaultYearMonth,
+        year: 0,
+        monthIdx: 0,
         dates: [],
     }
   },
   watch: {
     yearMonth: {
       handler(val) {
+        const yearMonth = val.split('-');
+        this.year = parseInt(yearMonth[0]);
+        this.monthIdx = parseInt(yearMonth[1]) - 1;
         this.dates = this.getDates(val);
       },
       immediate: true
     }
   },
   methods: {
-    getDates(yearMonthStr: string): Date[][] {
-        const yearMonth = yearMonthStr.split('-');
-        const nowYear = parseInt(yearMonth[0]);
-        const nowMonthIdx = parseInt(yearMonth[1]) - 1;
-
-        const startOfMonth = new Date(nowYear, nowMonthIdx, 1);
-        const endOfMonth = new Date(nowYear, nowMonthIdx + 1, 0);
+    getDates(): Date[][] {
+        const startOfMonth = new Date(this.year, this.monthIdx, 1);
+        const endOfMonth = new Date(this.year, this.monthIdx + 1, 0);
 
         // カレンダー表示の初日
         const subCntToSunday = startOfMonth.getDay();
@@ -88,11 +93,7 @@ export default {
         return date.getDay() === 6;
     },
     getDateClass(date: Date): string {
-        const yearMonth = this.yearMonth.split('-');
-        const nowYear = parseInt(yearMonth[0]);
-        const nowMonthIdx = parseInt(yearMonth[1]) - 1;
-
-        if (! (date.getFullYear() === nowYear && date.getMonth() === nowMonthIdx)) {
+        if (! (date.getFullYear() === this.year && date.getMonth() === this.monthIdx)) {
             return "col-outed";
         }
         if (date.toDateString() === this.today.toDateString()) {
