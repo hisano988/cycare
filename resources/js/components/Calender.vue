@@ -54,7 +54,7 @@ export default {
     getDates(yearMonthStr: string): Date[][] {
         const yearMonth = yearMonthStr.split('-');
         const nowYear = parseInt(yearMonth[0]);
-        const nowMonthIdx = parseInt(yearMonth[1] - 1);
+        const nowMonthIdx = parseInt(yearMonth[1]) - 1;
 
         const startOfMonth = new Date(nowYear, nowMonthIdx, 1);
         const endOfMonth = new Date(nowYear, nowMonthIdx + 1, 0);
@@ -68,8 +68,8 @@ export default {
         const endDate = new Date(endOfMonth.getFullYear(), endOfMonth.getMonth(), endOfMonth.getDate() + addCntToSaturday);
 
         // 1週間ごとに切り分けてDateの配列を生成
-        const dates = [];
-        let week = [];
+        const dates: Date[][] = [];
+        let week: Date[] = [];
         for(let date=startDate; date <= endDate; date.setDate(date.getDate() + 1)) {
             week.push(new Date(date.getTime()));
 
@@ -90,7 +90,7 @@ export default {
     getDateClass(date: Date): string {
         const yearMonth = this.yearMonth.split('-');
         const nowYear = parseInt(yearMonth[0]);
-        const nowMonthIdx = parseInt(yearMonth[1] - 1);
+        const nowMonthIdx = parseInt(yearMonth[1]) - 1;
 
         if (! (date.getFullYear() === nowYear && date.getMonth() === nowMonthIdx)) {
             return "col-outed";
@@ -104,6 +104,8 @@ export default {
         if (this.isSturday(date)) {
             return "col-sat"
         }
+
+        return '';
     },
     next() {
         const yearMonthDate = new Date(this.yearMonth);
