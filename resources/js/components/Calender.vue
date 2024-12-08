@@ -6,25 +6,29 @@
                 <button @click="next()">></button>
             </div>
             <table class="table table-bordered">
-                <tr>
-                    <td class="col-sun">日</td>
-                    <td>月</td>
-                    <td>火</td>
-                    <td>水</td>
-                    <td>木</td>
-                    <td>金</td>
-                    <td class="col-sat">土</td>
-                </tr>
-                <template v-for="week in dates">
+                <thead>
                     <tr>
-                        <td v-for="date in week">
-                            <div class="d-flex flex-column">
-                                <div :class="getDateClass(date)">{{ date.getDate() }}</div>
-                                <div v-if="isRecorded(date)">●</div>
-                            </div>
-                        </td>
+                        <td class="col-sun">日</td>
+                        <td>月</td>
+                        <td>火</td>
+                        <td>水</td>
+                        <td>木</td>
+                        <td>金</td>
+                        <td class="col-sat">土</td>
                     </tr>
-                </template>
+                </thead>
+                <tbody>
+                    <template v-for="week in dates">
+                        <tr>
+                            <td v-for="date in week">
+                                <div class="d-flex flex-column">
+                                    <div :class="getDateClass(date)">{{ date.getDate() }}</div>
+                                    <div v-if="isRecorded(date)">●</div>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
             </table>
         </div>
 </template>
