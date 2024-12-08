@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
         <div id="app">
             <Calender
                 default-year-month="{{ Carbon::today()->format('Y-m') }}"
+                :records='@json($records->toArray())'
             ></Calender>
         </div>
     </div>

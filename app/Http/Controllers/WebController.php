@@ -19,6 +19,7 @@ class WebController extends Controller
 
         return view('home')->with([
             'cycle' => $cycle,
+            'records' => $userPeriodRecords,
         ]);
     }
 

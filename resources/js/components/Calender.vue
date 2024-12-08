@@ -20,7 +20,7 @@
                         <td v-for="date in week">
                             <div class="d-flex flex-column">
                                 <div :class="getDateClass(date)">{{ date.getDate() }}</div>
-                                <!-- <div>@if($date->isSameDay($nextDay)) ● @endif</div> -->
+                                <div v-if="isRecorded(date)">●</div>
                             </div>
                         </td>
                     </tr>
@@ -37,15 +37,20 @@ export default {
         type: String, // Y-m
         required: true,
     },
+    records: {
+        type: Array,
+        default: () => [],
+        required: false,
+    }
   },
   data() {
-    const today = new Date();
     return {
-        today: today,
+        today: new Date(),
         yearMonth: this.$props.defaultYearMonth,
         year: 0,
         monthIdx: 0,
         dates: [],
+        filteredRecords: [],
     }
   },
   watch: {
@@ -54,7 +59,8 @@ export default {
         const yearMonth = val.split('-');
         this.year = parseInt(yearMonth[0]);
         this.monthIdx = parseInt(yearMonth[1]) - 1;
-        this.dates = this.getDates(val);
+        this.dates = this.getDates();
+        this.filteredRecords = this.getFilteredRecords();
       },
       immediate: true
     }
@@ -86,6 +92,26 @@ export default {
 
         return dates;
     },
+    getFilteredRecords() {
+        const startOfMonth = new Date(this.year, this.monthIdx, 1);
+        const endOfMonth = new Date(this.year, this.monthIdx + 1, 0);
+
+        return this.records
+            .map((record) => {
+                // UTCとして解釈され+9hされてしまうため時間は0固定しておく
+                const startDateUTC = new Date(record.startDate);
+                const endDateUTC = record.endDate ? new Date(record.endDate) : new Date(record.startDate);
+                startDateUTC.setHours(0, 0, 0, 0);
+                endDateUTC.setHours(0, 0, 0, 0);
+
+                return {
+                    startDate: startDateUTC,
+                    endDate: endDateUTC,
+                }
+            })
+            // 表示月と期間が重複しているもののみ抽出
+            .filter((record) => startOfMonth.getTime() <= record.endDate.getTime() && endOfMonth.getTime() >= record.startDate.getTime());
+    },
     isSunday(date: Date): boolean {
         return date.getDay() === 0;
     },
@@ -107,6 +133,10 @@ export default {
         }
 
         return '';
+    },
+    isRecorded(date: Date): boolean {
+        const time = date.getTime();
+        return this.filteredRecords.some((record) => time >= record.startDate.getTime() && time <= record.endDate.getTime());
     },
     next() {
         const yearMonthDate = new Date(this.yearMonth);
