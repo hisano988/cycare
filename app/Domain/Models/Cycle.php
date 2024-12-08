@@ -40,6 +40,15 @@ class Cycle
             });
     }
 
+    public function avgInterval(): ?int
+    {
+        if (! $this->isPredictable()) {
+            return null;
+        }
+
+        return (int) $this->intervals->avg();
+    }
+
     public function isPredictable(): bool
     {
         return $this->periodRecords->count() >= 2;
@@ -51,7 +60,7 @@ class Cycle
             throw new PredictException;
         }
 
-        $avgInterval = (int) $this->intervals->avg();
+        $avgInterval = $this->avgInterval();
         $latestPeriodRecord = $this->periodRecords->first();
 
         return $latestPeriodRecord->startDate->copy()->addDays($avgInterval);

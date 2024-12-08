@@ -24,6 +24,7 @@
                                 <div class="d-flex flex-column">
                                     <div :class="getDateClass(date)">{{ date.getDate() }}</div>
                                     <div v-if="isRecorded(date)">●</div>
+                                    <div v-if="isPredicted(date)">○</div>
                                 </div>
                             </td>
                         </tr>
@@ -45,12 +46,25 @@ export default {
         type: Array,
         default: () => [],
         required: false,
+    },
+    interval: {
+        type: Number,
+        default: null,
+        required: false,
     }
   },
   data() {
+    this.records.sort((a, b) => a.startDate - b.startDate);
+    const startDateOflatestRecordStr = this.records[this.records.length - 1].startDate ?? null;
+    const startDateOflatestRecord = startDateOflatestRecordStr ? new Date(startDateOflatestRecordStr) : null;
+    if (startDateOflatestRecord !== null) {
+        startDateOflatestRecord.setHours(0, 0, 0, 0);
+    }
+
     return {
         today: new Date(),
         yearMonth: this.$props.defaultYearMonth,
+        startDateOflatestRecord: startDateOflatestRecord,
         year: 0,
         monthIdx: 0,
         dates: [],
@@ -142,6 +156,17 @@ export default {
         const time = date.getTime();
         return this.filteredRecords.some((record) => time >= record.startDate.getTime() && time <= record.endDate.getTime());
     },
+    isPredicted(date: Date): boolean {
+        // 記録が1つも無い
+        if (this.startDateOflatestRecord === null) {
+            return false;
+        }
+        // 過去
+        if (date.getTime() < this.today.getTime()) {
+            return false;
+        }
+        return this.diffDays(date, this.startDateOflatestRecord) % this.interval === 0;
+    },
     next() {
         const yearMonthDate = new Date(this.yearMonth);
         yearMonthDate.setMonth(yearMonthDate.getMonth() + 1);
@@ -151,6 +176,10 @@ export default {
         const yearMonthDate = new Date(this.yearMonth);
         yearMonthDate.setMonth(yearMonthDate.getMonth() - 1);
         this.yearMonth = yearMonthDate.getFullYear() + '-' + (yearMonthDate.getMonth() + 1);
+    },
+    diffDays(day2: Date, day1: Date): number {
+        // 1日 = 86,400,000ミリ秒
+        return (day2.getTime() - day1.getTime()) / 86400000;
     }
   },
 }
