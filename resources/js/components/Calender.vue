@@ -55,8 +55,8 @@ export default {
   },
   data() {
     this.records.sort((a, b) => a.startDate - b.startDate);
-    const startDateOflatestRecordStr = this.records[this.records.length - 1].startDate ?? null;
-    const startDateOflatestRecord = startDateOflatestRecordStr ? new Date(startDateOflatestRecordStr) : null;
+    const latestRecord = this.records[this.records.length - 1];
+    const startDateOflatestRecord = latestRecord ? new Date(latestRecord.startDate) : null;
     if (startDateOflatestRecord !== null) {
         startDateOflatestRecord.setHours(0, 0, 0, 0);
     }
@@ -154,6 +154,10 @@ export default {
     },
     isRecorded(date: Date): boolean {
         const time = date.getTime();
+        // 未来
+        if (date.getTime() >= this.today.getTime()) {
+            return false;
+        }
         return this.filteredRecords.some((record) => time >= record.startDate.getTime() && time <= record.endDate.getTime());
     },
     isPredicted(date: Date): boolean {
