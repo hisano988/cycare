@@ -33,11 +33,20 @@ class Cycle
             ->reject(fn ($periodRecords) => ! $periodRecords->get(1)->isCalcTarget)
         // 間隔計算（日）
             ->map(function ($periodRecords) {
-                $beforeRecord = $periodRecords->get(0);
-                $nextRecord = $periodRecords->get(1);
+                $beforeRecord = $periodRecords->first();
+                $nextRecord = $periodRecords->last();
 
                 return $nextRecord->startDate->diffInDays($beforeRecord->startDate);
             });
+    }
+
+    public function avgInterval(): ?int
+    {
+        if (! $this->isPredictable()) {
+            return null;
+        }
+
+        return (int) $this->intervals->avg();
     }
 
     public function isPredictable(): bool
@@ -51,9 +60,9 @@ class Cycle
             throw new PredictException;
         }
 
-        $avgInterval = (int) $this->intervals->avg();
+        $avgInterval = $this->avgInterval();
         $latestPeriodRecord = $this->periodRecords->first();
 
-        return $latestPeriodRecord->startDate->addDays($avgInterval);
+        return $latestPeriodRecord->startDate->copy()->addDays($avgInterval);
     }
 }
