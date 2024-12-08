@@ -10,7 +10,7 @@
                     <td>金</td>
                     <td class="col-sat">土</td>
                 </tr>
-                <template v-for="week in getDates()">
+                <template v-for="week in dates">
                     <tr>
                         <td v-for="date in week">
                             <div class="d-flex flex-column">
@@ -30,16 +30,29 @@ export default {
   props: {
   },
   data() {
+    const today = new Date();
     return {
-        today: new Date(),
+        today: today,
+        yearMonth: today.getFullYear() + '-' + (today.getMonth() + 1), // Y-m
+        dates: [],
+    }
+  },
+  watch: {
+    yearMonth: {
+      handler(val) {
+        this.dates = this.getDates(val);
+      },
+      immediate: true
     }
   },
   methods: {
-    getDates(): Date[][] {
-        const nowYear = this.today.getFullYear();
-        const nowMonth = this.today.getMonth();
-        const startOfMonth = new Date(nowYear, nowMonth, 1);
-        const endOfMonth = new Date(nowYear, nowMonth + 1, 0);
+    getDates(yearMonthStr: string): Date[][] {
+        const yearMonth = yearMonthStr.split('-');
+        const nowYear = parseInt(yearMonth[0]);
+        const nowMonthIdx = parseInt(yearMonth[1] - 1);
+
+        const startOfMonth = new Date(nowYear, nowMonthIdx, 1);
+        const endOfMonth = new Date(nowYear, nowMonthIdx + 1, 0);
 
         // カレンダー表示の初日
         const subCntToSunday = startOfMonth.getDay();
