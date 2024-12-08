@@ -1,5 +1,10 @@
 <template>
         <div>
+            <div  class="d-flex justify-content-center">
+                <button @click="previous()"><</button>
+                <span>{{ yearMonth }}</span>
+                <button @click="next()">></button>
+            </div>
             <table class="table table-bordered">
                 <tr>
                     <td class="col-sun">日</td>
@@ -83,10 +88,14 @@ export default {
         return date.getDay() === 6;
     },
     getDateClass(date: Date): string {
-        if (date.getMonth() !== this.today.getMonth()) {
+        const yearMonth = this.yearMonth.split('-');
+        const nowYear = parseInt(yearMonth[0]);
+        const nowMonthIdx = parseInt(yearMonth[1] - 1);
+
+        if (! (date.getFullYear() === nowYear && date.getMonth() === nowMonthIdx)) {
             return "col-outed";
         }
-        if (date.getDate() === this.today.getDate()) {
+        if (date.toDateString() === this.today.toDateString()) {
             return "font-weight-bold col-today";
         }
         if (this.isSunday(date)) {
@@ -95,6 +104,16 @@ export default {
         if (this.isSturday(date)) {
             return "col-sat"
         }
+    },
+    next() {
+        const yearMonthDate = new Date(this.yearMonth);
+        yearMonthDate.setMonth(yearMonthDate.getMonth() + 1);
+        this.yearMonth = yearMonthDate.getFullYear() + '-' + (yearMonthDate.getMonth() + 1);
+    },
+    previous() {
+        const yearMonthDate = new Date(this.yearMonth);
+        yearMonthDate.setMonth(yearMonthDate.getMonth() - 1);
+        this.yearMonth = yearMonthDate.getFullYear() + '-' + (yearMonthDate.getMonth() + 1);
     }
   },
 }
