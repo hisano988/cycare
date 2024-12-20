@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
             <Calender
                 default-year-month="{{ Carbon::today()->format('Y-m') }}"
                 :records='@json($records->toArray())'
-                interval="{{ $cycle->avgInterval() }}"
+                :interval="{{ $cycle->avgInterval() }}"
             ></Calender>
         </div>
     </div>
