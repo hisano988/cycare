@@ -9,7 +9,7 @@ test('home page is displayed', function () {
         ->actingAs($user)
         ->get('/home');
 
-    $response->assertOk();
+                    $response->assertOk();
 });
 
 test('record can be created', function () {
