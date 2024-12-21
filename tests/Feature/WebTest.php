@@ -1,9 +1,9 @@
 <?php
 
-use App\Infrastructure\Eloquents\User;
+use App\Infrastructure\Eloquents\EloquentUser;
 
 test('home page is displayed', function () {
-    $user = User::factory()->create();
+    $user = EloquentUser::factory()->create();
 
     $response = $this
         ->actingAs($user)
@@ -13,7 +13,7 @@ test('home page is displayed', function () {
 });
 
 test('record can be created', function () {
-    $user = User::factory()->create();
+    $user = EloquentUser::factory()->create();
 
     $response = $this
         ->actingAs($user)
