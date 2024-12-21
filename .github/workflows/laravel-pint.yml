@@ -17,3 +17,10 @@ jobs:
 
       - name: Apply Pint
         uses: aglipanci/laravel-pint-action@2.1.0
+        with:
+          preset: laravel
+          verboseMode: true
+          testMode: true
+          configPath: "vendor/my-company/coding-style/pint.json"
+          pintVersion: 1.8.0
+          onlyDirty: true
