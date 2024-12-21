@@ -2,8 +2,8 @@ name: Pint
 
 on:
    pull_request:
-     paths:
-       - '**.php'
+      branches:
+        - main
 
 jobs:
   pint:
