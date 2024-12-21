@@ -13,6 +13,10 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'period_records';
+
+    protected $primaryKey = 'user_id';
+
     /**
      * The attributes that are mass assignable.
      *
