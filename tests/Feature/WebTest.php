@@ -17,7 +17,7 @@ test('record can be created', function () {
 
     $response = $this
         ->actingAs($user)
-        ->post('/record', [
+        ->post('/home/record', [
             'start_date' => '2021-01-01',
             'is_calc_target' => true,
         ]);
