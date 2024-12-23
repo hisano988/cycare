@@ -2,13 +2,14 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebController;
+use App\Http\Middleware\StoreLoginUserMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', StoreLoginUserMiddleware::class])->group(function () {
     Route::prefix('/home')->group(function () {
         Route::get('/', [WebController::class, 'showHome'])->name('web.home');
 
