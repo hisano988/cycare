@@ -5,6 +5,7 @@ namespace App\Infrastructure\RepositoryImpls;
 use App\Domain\Models\User\User;
 use App\Domain\Repositories\UserRepository;
 use App\Infrastructure\Eloquents\EloquentUser;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 class UserRepositoryImpl implements UserRepository
@@ -30,15 +31,27 @@ class UserRepositoryImpl implements UserRepository
         return $users;
     }
 
-    public function upsert(User $user): User
+    public function register(User $user, string $hashedPassword): User
     {
         $eloquent = new EloquentUser;
         $eloquent->name = $user->getName();
         $eloquent->email = $user->getEmail();
         $eloquent->email_verified_at = $user->getEmailVerifiedAt();
+        $eloquent->password = $hashedPassword;
         $eloquent->save();
 
-        $user->userId = $eloquent->userId;
+        $user->userId = $eloquent->user_id;
+
+        return $user;
+    }
+
+    public function update(User $user): User
+    {
+        $eloquent = EloquentUser::find($user->userId);
+        $eloquent->name = $user->getName();
+        $eloquent->email = $user->getEmail();
+        $eloquent->email_verified_at = $user->getEmailVerifiedAt();
+        $eloquent->save();
 
         return $user;
     }
@@ -55,12 +68,12 @@ class UserRepositoryImpl implements UserRepository
         EloquentUser::destroy($userId);
     }
 
-    private function newUser(EloquentUser $user): User
+    private function newUser(EloquentUser $eloquent): User
     {
-        $newUser = new User($user->name, $user->email);
-        $newUser->userId = $user->user_id;
-        $newUser->setEmailVerifiedAt($user->emailVerifiedAt);
+        $model = new User($eloquent->name, $eloquent->email);
+        $model->userId = $eloquent->user_id;
+        $model->setEmailVerifiedAt(is_null($eloquent->email_verified_at) ? null : Carbon::parse($eloquent->email_verified_at));
 
-        return $newUser;
+        return $model;
     }
 }

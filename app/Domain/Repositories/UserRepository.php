@@ -14,7 +14,9 @@ interface UserRepository
      */
     public function search(string $email): Collection;
 
-    public function upsert(User $user): User;
+    public function register(User $user, string $hashedPassword): User;
+
+    public function update(User $user): User;
 
     public function changePassword(int $userId, string $hashedPassword): void;
 

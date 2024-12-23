@@ -4,7 +4,7 @@ namespace App\Domain\Models\User;
 
 use App\Domain\Repositories\UserRepository;
 use App\Exception\InvalidParameterException;
-use Illminate\Support\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class User
@@ -48,12 +48,13 @@ class User
         // パスワードのハッシュ化処理
         $hashedPassword = Hash::make($rawPassword);
 
+        $this->emailVerifiedAt = null;
+
         /** @var UserRepository $userRepository */
         $userRepository = app(UserRepository::class);
 
         // ユーザー登録処理
-        $newUser = $userRepository->upsert($this);
-        $userRepository->changePassword($this->userId, $hashedPassword);
+        $newUser = $userRepository->register($this, $hashedPassword);
 
         return $newUser;
     }
@@ -72,13 +73,13 @@ class User
             throw new InvalidParameterException;
         }
 
-        if ($this->email === $email) {
+        if ($this->email !== $email) {
             $this->emailVerifiedAt = null;
         }
         $this->email = $email;
         $this->name = $name;
 
-        return $userRepository->upsert($this);
+        return $userRepository->update($this);
     }
 
     public function unsubscribe(): void
