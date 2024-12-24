@@ -28,11 +28,10 @@ class ProfileController extends Controller
     {
         $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        /** @var User $user */
+        $user = session('login_user');
 
-        $request->user()->save();
+        $user->updateProfile($request->input('name'), $request->input('email'));
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -46,11 +45,11 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
+        $user = session('login_user');
 
         Auth::logout();
 
-        $user->delete();
+        $user->unsubscribe();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

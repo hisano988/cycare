@@ -14,11 +14,13 @@ class VerifyEmailController extends Controller
      */
     public function __invoke(EmailVerificationRequest $request): RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        $user = session('login_user');
+        if ($user->hasVerifiedEmail()) {
             return redirect()->intended(route('web.home', absolute: false).'?verified=1');
         }
 
-        if ($request->user()->markEmailAsVerified()) {
+        if ($user->markEmailAsVerified()) {
+            // TODO: ドメインモデルを引数に取るよう修正
             event(new Verified($request->user()));
         }
 

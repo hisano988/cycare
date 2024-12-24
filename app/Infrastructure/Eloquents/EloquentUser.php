@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class EloquentUser extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    protected $table = 'users';
+
+    protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.

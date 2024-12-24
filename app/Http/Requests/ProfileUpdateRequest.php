@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Infrastructure\Eloquents\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -23,7 +21,6 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];
     }
