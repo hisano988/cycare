@@ -43,6 +43,26 @@ class User
         return $this->emailVerifiedAt;
     }
 
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->emailVerifiedAt !== null;
+    }
+
+    public function markEmailAsVerified(): bool
+    {
+        if ($this->hasVerifiedEmail()) {
+            return false;
+        }
+
+        $this->emailVerifiedAt = Carbon::now();
+
+        /** @var UserRepository $userRepository */
+        $userRepository = app(UserRepository::class);
+        $userRepository->update($this);
+
+        return true;
+    }
+
     public function register(string $rawPassword): self
     {
         // パスワードのハッシュ化処理
