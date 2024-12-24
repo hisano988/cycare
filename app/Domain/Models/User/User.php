@@ -102,6 +102,15 @@ class User
         return $userRepository->update($this);
     }
 
+    public function changePassword(string $rawNewPassword): void
+    {
+        /** @var UserRepository $userRepository */
+        $userRepository = app(UserRepository::class);
+
+        $hashedPassword = Hash::make($rawNewPassword);
+        $userRepository->changePassword($this->userId, $hashedPassword);
+    }
+
     public function unsubscribe(): void
     {
         /** @var UserRepository $userRepository */
